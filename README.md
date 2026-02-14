@@ -56,7 +56,7 @@ User these credentials to test the login system:
 
 Authenticate user and receive token.
 
-**Request Body:**
+#### Request Body
 
 ```json
 {
@@ -65,7 +65,7 @@ Authenticate user and receive token.
 }
 ```
 
-**Response (Success)**
+#### Response (Success)
 
 ```json
 {
@@ -75,7 +75,7 @@ Authenticate user and receive token.
 }
 ```
 
-**Response (Error)**
+#### Response (Error)
 
 ```json
 {
@@ -94,7 +94,7 @@ Access protected dashboard (required authentication).
 Authorization: Bearer <token>
 ```
 
-**Response (Success)**
+#### Response (Success)
 
 ```json
 {
@@ -108,7 +108,7 @@ Authorization: Bearer <token>
 }
 ```
 
-**Response (Error)**
+#### Response (Error)
 
 ```json
 {
@@ -138,6 +138,32 @@ For development with auto-reload:
 ```bash
 npm run dev
 ```
+
+## Screenshort
+
+### File/Folder Structure
+
+![File/Folder Structure](./assets/file-structure.png)
+
+## Server Booted
+
+![Server Booted](./assets/server-booted.png)
+
+## Login Page
+
+![Login Page](./assets/login.png)
+
+## Dashboard Page
+
+![Dashboard Page](./assets/dashboard.png)
+
+## Health Check
+
+![Health Check](./assets/health.png)
+
+## References
+
+- [Setup Guide](./SETUP_GUIDE.md)
 
 ## License
 

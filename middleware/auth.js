@@ -15,7 +15,7 @@ const authMiddleware = (req, res, next) => {
     const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : authHeader
 
     // Verify token
-    if(token !== VALID_TOKEN){
+    if (token !== VALID_TOKEN) {
         return res.status(403).json({
             success: false,
             message: "Invalid token. Access denied."
