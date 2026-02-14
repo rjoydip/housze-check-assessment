@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Housze Check - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login -->
+    <div id="loginSection">
+        <h1>Login</h1>
+        <p>Enter your credentials to access the dashboard</p>
+
+        <form id="loginForm">
+            <div>
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="Enter your email" required />
+            </div>
+
+            <div>
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required/>
+            </div>
+
+            <button type="submit" id="signinBtn">Sign In</button>
+        </form>
+
+        <div>
+            <h2>Test Credentials</h2>
+            <p><strong>Email:</strong>test@test.com</p>
+            <p><strong>Password:</strong>123456</p>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+     <div id="dashboardSection" class="hidden">
+        <h1>Welcome to Dashboard</h1>
+
+        <button onclick="logout()">Logout</button>
+     </div>
+
+     <script>
+        const API_URL = window.location.origin + '/api'
+
+        // DOM elements
+        const loginSection = document.getElementById("loginSection")
+        const dashboardSection = document.getElementById("dashboardSection")
+        const loginForm = document.getElementById("loginForm")
+        const signinBtn = document.getElementById("signinBtn")
+
+        // Check if user is alredy logged in
+        window.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('authToken')
+            if(token) {
+                loadDashboard()
+            }
+        })
+
+        // Login form submission
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault()
+
+            const email = document.getElementById("email").value
+            const password = document.getElementById("password").value
+
+            console.log({ email, password })
+
+            signinBtn.disable = true
+            signinBtn.innerHTML = "Signin in ..."
+
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                })
+
+                const data = await response.json()
+
+                if (response.ok && data.success) {
+                    localStorage.setItem("authToken", data.token)
+
+                    setTimeout(() => {
+                        loadDashboard()
+                    }, 1000)
+                }
+            } catch(error) {
+                consol.error("Login Error", error)
+                signinBtn.disable = false
+                signinBtn.innerHTML = "Sign In"
+            }
+        })
+
+        // Load Dashboard
+
+        async function loadDashboard() {
+            const token = localStorage.getItem('authToken')
+
+            if (!token) {
+                showLoginSection()
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/dashboard`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+
+                const data = await response.json()
+
+                if (response.ok && data.success) {
+                    // Show dashboard
+                    loginSection.classList.add('hidden');
+                    dashboardSection.classList.remove('hidden')
+                }
+            } catch(error) {
+                console.error("Dashboard error: ", error)
+                showLoginSection()
+            }
+        }
+
+        // Show
+        function showLoginSection() {
+            dashboardSection.classList.add('hidden');
+            loginSection.classList.remove('hidden')
+
+            loginForm.reset()
+
+            signinBtn.disabled = false;
+            signinBtn.innerHTML = 'Sign In'
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('authToken')
+            setTimeout(() => {
+                showLoginSection()
+            }, 1000)
+        }
+
+     </script>
+</body>
+</html>
